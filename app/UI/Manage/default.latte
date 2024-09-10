@@ -1,0 +1,19 @@
+{layout '@layout.latte'}
+
+<h1>إدارة الأدوات</h1>
+<form method="post">
+    <input type="text" name="name" placeholder="اسم الأداة" required>
+    <textarea name="description" placeholder="وصف الأداة"></textarea>
+    <input type="number" name="quantity" min="1" placeholder="الكمية" required>
+    <button type="submit">إضافة</button>
+</form>
+
+<h2>الأدوات المتاحة</h2>
+<ul>
+    {foreach $tools as $tool}
+    <li>
+        {$tool->name} (الكمية: {$tool->quantity})
+        <a href="{$link deleteTool $tool->id}">حذف</a>
+    </li>
+    {/foreach}
+</ul>

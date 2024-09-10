@@ -1,0 +1,17 @@
+services:
+	- App\Core\RouterFactory::createRouter
+	- App\Model\Tool
+	- App\Model\Borrow
+	- App\Model\UserManager
+	- App\Security\Authenticator
+	  	 
+
+	 
+	 
+ 
+
+search:
+	-	in: %appDir%
+		classes:
+			- *Factory
+			- *Facade

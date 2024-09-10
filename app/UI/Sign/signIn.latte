@@ -1,0 +1,29 @@
+<h1>تسجيل الدخول</h1>
+
+<form n:name="signInForm">
+    <div>
+        <label for="username">اسم المستخدم:</label>
+        <input type="text" n:name="username" id="username" required>
+    </div>
+
+    <div>
+        <label for="password">كلمة المرور:</label>
+        <input type="password" n:name="password" id="password" required>
+    </div>
+
+    <div>
+        <button type="submit">تسجيل الدخول</button>
+    </div>
+</form>
+
+
+ {if $form->errors}
+    <ul class="errors">
+        {foreach $form->errors as $error}
+            <li>{$error}</li>
+        {/foreach}
+    </ul>
+{/if}
+ <link rel="stylesheet" href="/css/styles.css">
+
+

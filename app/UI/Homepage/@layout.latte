@@ -1,0 +1,39 @@
+ <!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الأدوات</title>
+    
+ 
+    <link rel="stylesheet" href="/css/styles.css">
+     
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+ 
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+ 
+<nav>
+    <ul>
+        <li><a href="{link Homepage:default}" class="active">الصفحة الرئيسية</a></li>
+        <li><a href="{link Borrow:default}">تسجيل خروج الأدوات</a></li>
+        <li><a href="{link Return:default}">إعادة الأدوات</a></li>
+
+        {if $user->isInRole('admin')}
+            <li><a href="{link Manage:default}">إدارة المنتجات</a></li>
+        {/if}
+
+        <li><a href="{link Sign:out}">تسجيل الخروج</a></li>
+    </ul>
+</nav>
+
+ 
+<div class="container">
+    {include content}
+</div>
+
+</body>
+</html>

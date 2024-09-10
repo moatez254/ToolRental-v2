@@ -1,0 +1,17 @@
+ {block content}
+<h1>إعادة الأدوات</h1>
+<form method="post">
+    {foreach $borrows as $borrow}
+        <div>
+            <label>{$borrow->tool->name} - المستعار: {$borrow->quantity}</label>
+            <input type="number" name="quantities[{$borrow->id}]" min="1" max="{$borrow->quantity}" value="{$borrow->quantity}">
+            <select name="status[{$borrow->id}]">
+                <option value="good">سليمة</option>
+                <option value="damaged">معطوبة</option>
+                <option value="lost">مفقودة</option>
+            </select>
+        </div>
+    {/foreach}
+    <button type="submit">إعادة الأدوات</button>
+</form>
+{/block}

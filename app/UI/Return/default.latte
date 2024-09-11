@@ -3,10 +3,10 @@
 <form method="post">
     {foreach $borrows as $borrow}
         <div>
-            <label>{$borrow->tool->name} - المستعار: {$borrow->quantity}</label>
-            <input type="number" name="quantities[{$borrow->id}]" min="1" max="{$borrow->quantity}" value="{$borrow->quantity}">
+             <label>{$borrow->tool->name} . المستعار: {$borrow->tool->quantity}</label>
+            <input type="number" name="quantities[{$borrow->id}]" min="1" max="{$borrow->tool->quantity}" value="{$borrow->tool->quantity}">
             <select name="status[{$borrow->id}]">
-                <option value="good">سليمة</option>
+                <option value="good">بحالة جيدة</option>
                 <option value="damaged">معطوبة</option>
                 <option value="lost">مفقودة</option>
             </select>

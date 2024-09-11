@@ -3,9 +3,11 @@
 declare(strict_types=1);
 namespace App\UI\Borrow;
 
+use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
 use App\Model\Tool;
 use App\Model\Borrow;
+use stdClass;
 
 class BorrowPresenter extends Presenter
 {
@@ -16,26 +18,40 @@ class BorrowPresenter extends Presenter
     {
         $this->toolModel = $toolModel;
         $this->borrowModel = $borrowModel;
+		
     }
 
     public function renderDefault(): void
     {
+
         $this->template->tools = $this->toolModel->getAvailableTools();
     }
-
-     public function handleBorrow(array $toolIds, array $quantities): void
-{
-    foreach ($toolIds as $index => $toolId) {
-        $quantity = (int)$quantities[$index];
-        
-        if ($quantity > 0) {
-            $this->borrowModel->borrowTool($this->getUser()->getId(), $toolId, $quantity);
-            $this->toolModel->updateQuantity($toolId, $quantity);
-        }
-    }
+	protected function createComponentBorrowForm(): Form
+	{
+		$form = new Form;
+		$tools = $this->toolModel->getAvailableTools();
+		foreach ($tools as $id => $tool) {
+			$form->addInteger("$id", $tool['name'])
+				->setDefaultValue(1)
+				->addRule($form::RANGE, 'Quantity must be between 1 and ' . $tool['quantity'], [1, $tool['quantity']]);
+		}
 	
-    $this->redirect('Homepage:');
-}
+		$form->addSubmit('submit', 'Borrow Tools');
+		$form->onSuccess[] = [$this, 'borrowFormSucceeded'];
+		return $form;
+	}
 
-
+	public function borrowFormSucceeded(Form $form, stdClass $values): void
+	{
+		foreach ($values as $id => $quantity) {
+			if ($quantity === 0) {
+				continue;
+			} 
+			$this->borrowModel->borrowTool($this->getUser()->getId(),(int) $id, $quantity);
+			$this->toolModel->updateQuantity((int) $id, $quantity);
+				}
+	
+		$this->redirect('Homepage:');
+	}
+	
 }

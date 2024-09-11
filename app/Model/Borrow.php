@@ -14,17 +14,16 @@ class Borrow
     {
         $this->database = $database;
     }
-
-    public function borrowTool(int $userId, int $toolId, int $quantity)
-    {
-        $this->database->table('borrows')->insert([
-            'user_id' => $userId,
-            'tool_id' => $toolId,
-            'quantity' => $quantity,
-            'borrow_date' => new DateTime()
-        ]);
-    }
-
+	public function borrowTool(int $userId, int $toolId, int $quantity)
+	{
+		$this->database->table('tools')
+			->where('id', $toolId)
+			->update([
+			'id' => $toolId,
+			'quantity' => $quantity,
+		]);
+	}
+	
     public function returnTool(int $borrowId, string $status, int $quantity)
     {
         $borrow = $this->database->table('borrows')->get($borrowId);
@@ -36,11 +35,15 @@ class Borrow
         }
     }
 
-    public function getBorrowsByUser(int $userId)
-    {
-        return $this->database->table('borrows')->where('user_id', $userId)->where('return_date IS NULL')->fetchAll();
-    }
-
+	public function getBorrowsByUser(int $userId)
+	{
+		return $this->database->table('borrows')
+			->where('user_id', $userId)
+			->where('return_date IS NULL')  
+			->fetchAll();
+	}
+	
+	
     public function getBorrowedTools()
     {
         return $this->database->table('borrows')->where('return_date IS NULL')->fetchAll();

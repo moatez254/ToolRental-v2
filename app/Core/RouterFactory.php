@@ -20,6 +20,11 @@ final class RouterFactory
 		$router->addRoute('borrow', 'Borrow:default');
 		$router->addRoute('return', 'Return:default');
 		$router->addRoute('manage', 'Manage:default');
+		$router->addRoute('borrow/handleBorrow', 'Borrow:handleBorrow');
+
+
+	
+
 	 
 
  

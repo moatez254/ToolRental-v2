@@ -52,22 +52,22 @@ final class Template_81777eff6b extends Latte\Runtime\Template
 ';
 		foreach ($borrows as $borrow) /* line 4 */ {
 			echo '        <div>
-            <label>';
+             <label>';
 			echo LR\Filters::escapeHtmlText($borrow->tool->name) /* line 6 */;
-			echo ' - المستعار: ';
-			echo LR\Filters::escapeHtmlText($borrow->quantity) /* line 6 */;
+			echo ' . المستعار: ';
+			echo LR\Filters::escapeHtmlText($borrow->tool->quantity) /* line 6 */;
 			echo '</label>
             <input type="number" name="quantities[';
 			echo LR\Filters::escapeHtmlAttr($borrow->id) /* line 7 */;
 			echo ']" min="1" max="';
-			echo LR\Filters::escapeHtmlAttr($borrow->quantity) /* line 7 */;
+			echo LR\Filters::escapeHtmlAttr($borrow->tool->quantity) /* line 7 */;
 			echo '" value="';
-			echo LR\Filters::escapeHtmlAttr($borrow->quantity) /* line 7 */;
+			echo LR\Filters::escapeHtmlAttr($borrow->tool->quantity) /* line 7 */;
 			echo '">
             <select name="status[';
 			echo LR\Filters::escapeHtmlAttr($borrow->id) /* line 8 */;
 			echo ']">
-                <option value="good">سليمة</option>
+                <option value="good">بحالة جيدة</option>
                 <option value="damaged">معطوبة</option>
                 <option value="lost">مفقودة</option>
             </select>

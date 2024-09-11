@@ -23,7 +23,7 @@ class  HomepagePresenter  extends Presenter
     {
         parent::startup();
         if (!$this->getUser()->isLoggedIn()) {
-            $this->redirect('Sign:SignIn');
+            $this->redirect('Sign:in');
         }
     }
 

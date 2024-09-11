@@ -1,13 +1,4 @@
  {block content}
-    <h1>تسجيل خروج الأدوات</h1>
-    <form method="post">
-        {foreach $tools as $tool}
-            <div>
-                <label for="tool-{$tool->id}">{$tool->name|escapeHtml} المتوفر: {$tool->quantity|escapeHtml}</label>
-                <input type="number" id="tool-{$tool->id}" name="quantities[{$tool->id}]" min="1" max="{$tool->quantity}" value="1">
-                <input type="hidden" name="toolIds[{$tool->id}]" value="{$tool->id}">
-            </div>
-        {/foreach}
-        <button type="submit">تسجيل خروج الأدوات</button>
-    </form>
+{control borrowForm}
 {/block}
+

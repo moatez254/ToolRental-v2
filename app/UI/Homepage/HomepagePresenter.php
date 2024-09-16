@@ -4,40 +4,34 @@ declare(strict_types=1);
 
 namespace App\UI\Homepage;
 
-use Nette\Application\UI\Presenter;
-use App\Model\Tool;
-use App\Model\Borrow;
 
-class  HomepagePresenter  extends Presenter
+use Nette;
+
+final class homepagePresenter extends BasePresenter
 {
-    private Tool $toolModel;
-    private Borrow $borrowModel;
+    private Nette\Database\Explorer $database;
 
-    public function __construct(Tool $toolModel, Borrow $borrowModel)
+    public function __construct(Nette\Database\Explorer $database)
     {
-        $this->toolModel = $toolModel;
-        $this->borrowModel = $borrowModel;
+        parent::__construct();
+        $this->database = $database;
     }
 
-    protected function startup()
+    public function renderDefault(): void
     {
-        parent::startup();
-        if (!$this->getUser()->isLoggedIn()) {
-            $this->redirect('Sign:in');
+        $tools = $this->database->table('tools')->fetchAll();
+        $this->template->tools = $tools;
+
+        
+        $toolNames = [];
+        $toolQuantities = [];
+
+        foreach ($tools as $tool) {
+            $toolNames[] = $tool->name;
+            $toolQuantities[] = $tool->quantity;
         }
-    }
 
-	public function renderDefault(): void
-	{
-		$availableTools = $this->toolModel->getAvailableTools();
-		$borrowedTools = $this->borrowModel->getBorrowedTools();
-	
-		$this->template->availableToolsJson = json_encode($availableTools);
-		$this->template->borrowedToolsJson = json_encode($borrowedTools);
-		
-		$this->template->availableTools = $availableTools;
-		$this->template->borrowedTools = $borrowedTools;
-	}
-	
-	
+        $this->template->toolNamesJson = json_encode($toolNames);
+        $this->template->toolQuantitiesJson = json_encode($toolQuantities);
+    }
 }

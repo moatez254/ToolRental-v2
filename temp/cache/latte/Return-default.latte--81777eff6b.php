@@ -24,19 +24,7 @@ final class Template_81777eff6b extends Latte\Runtime\Template
 		}
 
 		$this->renderBlock('content', get_defined_vars()) /* line 1 */;
-	}
-
-
-	public function prepare(): array
-	{
-		extract($this->params);
-
-		if (!$this->getReferringTemplate() || $this->getReferenceType() === 'extends') {
-			foreach (array_intersect_key(['borrow' => '4'], $this->params) as $ʟ_v => $ʟ_l) {
-				trigger_error("Variable \$$ʟ_v overwritten in foreach on line $ʟ_l");
-			}
-		}
-		return get_defined_vars();
+		echo "\n";
 	}
 
 
@@ -47,37 +35,8 @@ final class Template_81777eff6b extends Latte\Runtime\Template
 		extract($ʟ_args);
 		unset($ʟ_args);
 
-		echo '<h1>إعادة الأدوات</h1>
-<form method="post">
-';
-		foreach ($borrows as $borrow) /* line 4 */ {
-			echo '        <div>
-             <label>';
-			echo LR\Filters::escapeHtmlText($borrow->tool->name) /* line 6 */;
-			echo ' . المستعار: ';
-			echo LR\Filters::escapeHtmlText($borrow->tool->quantity) /* line 6 */;
-			echo '</label>
-            <input type="number" name="quantities[';
-			echo LR\Filters::escapeHtmlAttr($borrow->id) /* line 7 */;
-			echo ']" min="1" max="';
-			echo LR\Filters::escapeHtmlAttr($borrow->tool->quantity) /* line 7 */;
-			echo '" value="';
-			echo LR\Filters::escapeHtmlAttr($borrow->tool->quantity) /* line 7 */;
-			echo '">
-            <select name="status[';
-			echo LR\Filters::escapeHtmlAttr($borrow->id) /* line 8 */;
-			echo ']">
-                <option value="good">بحالة جيدة</option>
-                <option value="damaged">معطوبة</option>
-                <option value="lost">مفقودة</option>
-            </select>
-        </div>
-';
-
-		}
-
-		echo '    <button type="submit">إعادة الأدوات</button>
-</form>
-';
+		$ʟ_tmp = $this->global->uiControl->getComponent('returnForm');
+		if ($ʟ_tmp instanceof Nette\Application\UI\Renderable) $ʟ_tmp->redrawControl(null, false);
+		$ʟ_tmp->render() /* line 2 */;
 	}
 }

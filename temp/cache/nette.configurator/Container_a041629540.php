@@ -74,9 +74,10 @@ class Container_a041629540 extends Nette\DI\Container
 		'Nette\Application\Routers\RouteList' => [['01']],
 		'App\Model\Tool' => [['02']],
 		'App\Model\Borrow' => [['03']],
+		'Nette\Security\Authenticator' => [['04']],
+		'Nette\Security\IAuthenticator' => [['04']],
 		'App\Model\UserManager' => [['04']],
-		'Nette\Security\IAuthenticator' => [['05']],
-		'App\Security\Authenticator' => [['05']],
+		'App\UI\homepage\BasePresenter' => [2 => ['application.1', 'application.5', 'application.6', 'application.7']],
 		'Nette\Application\UI\Presenter' => [
 			2 => ['application.1', 'application.2', 'application.4', 'application.5', 'application.6', 'application.7'],
 		],
@@ -92,6 +93,21 @@ class Container_a041629540 extends Nette\DI\Container
 		'Nette\ComponentModel\Component' => [
 			2 => ['application.1', 'application.2', 'application.4', 'application.5', 'application.6', 'application.7'],
 		],
+		'Nette\ComponentModel\IComponent' => [
+			2 => ['application.1', 'application.2', 'application.4', 'application.5', 'application.6', 'application.7'],
+		],
+		'Nette\ComponentModel\IContainer' => [
+			2 => ['application.1', 'application.2', 'application.4', 'application.5', 'application.6', 'application.7'],
+		],
+		'Nette\Application\UI\SignalReceiver' => [
+			2 => ['application.1', 'application.2', 'application.4', 'application.5', 'application.6', 'application.7'],
+		],
+		'Nette\Application\UI\StatePersistent' => [
+			2 => ['application.1', 'application.2', 'application.4', 'application.5', 'application.6', 'application.7'],
+		],
+		'Nette\Application\UI\Renderable' => [
+			2 => ['application.1', 'application.2', 'application.4', 'application.5', 'application.6', 'application.7'],
+		],
 		'Nette\Application\IPresenter' => [
 			2 => [
 				'application.1',
@@ -105,26 +121,11 @@ class Container_a041629540 extends Nette\DI\Container
 				'application.9',
 			],
 		],
-		'Nette\Application\UI\Renderable' => [
-			2 => ['application.1', 'application.2', 'application.4', 'application.5', 'application.6', 'application.7'],
-		],
-		'Nette\Application\UI\StatePersistent' => [
-			2 => ['application.1', 'application.2', 'application.4', 'application.5', 'application.6', 'application.7'],
-		],
-		'Nette\Application\UI\SignalReceiver' => [
-			2 => ['application.1', 'application.2', 'application.4', 'application.5', 'application.6', 'application.7'],
-		],
-		'Nette\ComponentModel\IContainer' => [
-			2 => ['application.1', 'application.2', 'application.4', 'application.5', 'application.6', 'application.7'],
-		],
-		'Nette\ComponentModel\IComponent' => [
-			2 => ['application.1', 'application.2', 'application.4', 'application.5', 'application.6', 'application.7'],
-		],
 		'App\UI\Return\ReturnPresenter' => [2 => ['application.1']],
 		'App\UI\Sign\SignPresenter' => [2 => ['application.2']],
 		'App\UI\Error\Error5xx\Error5xxPresenter' => [2 => ['application.3']],
 		'App\UI\Error\Error4xx\Error4xxPresenter' => [2 => ['application.4']],
-		'App\UI\Homepage\HomepagePresenter' => [2 => ['application.5']],
+		'App\UI\Homepage\homepagePresenter' => [2 => ['application.5']],
 		'App\UI\Borrow\BorrowPresenter' => [2 => ['application.6']],
 		'App\UI\Manage\ManagePresenter' => [2 => ['application.7']],
 		'NetteModule\ErrorPresenter' => [2 => ['application.8']],
@@ -162,15 +163,9 @@ class Container_a041629540 extends Nette\DI\Container
 	}
 
 
-	public function createService05(): App\Security\Authenticator
-	{
-		return new App\Security\Authenticator($this->getService('04'), $this->getService('security.passwords'));
-	}
-
-
 	public function createServiceApplication__1(): App\UI\Return\ReturnPresenter
 	{
-		$service = new App\UI\Return\ReturnPresenter($this->getService('03'), $this->getService('02'));
+		$service = new App\UI\Return\ReturnPresenter($this->getService('database.default.explorer'));
 		$service->injectPrimary(
 			$this->getService('http.request'),
 			$this->getService('http.response'),
@@ -225,9 +220,9 @@ class Container_a041629540 extends Nette\DI\Container
 	}
 
 
-	public function createServiceApplication__5(): App\UI\Homepage\HomepagePresenter
+	public function createServiceApplication__5(): App\UI\Homepage\homepagePresenter
 	{
-		$service = new App\UI\Homepage\HomepagePresenter($this->getService('02'), $this->getService('03'));
+		$service = new App\UI\Homepage\homepagePresenter($this->getService('database.default.explorer'));
 		$service->injectPrimary(
 			$this->getService('http.request'),
 			$this->getService('http.response'),
@@ -244,7 +239,7 @@ class Container_a041629540 extends Nette\DI\Container
 
 	public function createServiceApplication__6(): App\UI\Borrow\BorrowPresenter
 	{
-		$service = new App\UI\Borrow\BorrowPresenter($this->getService('02'), $this->getService('03'));
+		$service = new App\UI\Borrow\BorrowPresenter($this->getService('database.default.explorer'));
 		$service->injectPrimary(
 			$this->getService('http.request'),
 			$this->getService('http.response'),
@@ -261,7 +256,7 @@ class Container_a041629540 extends Nette\DI\Container
 
 	public function createServiceApplication__7(): App\UI\Manage\ManagePresenter
 	{
-		$service = new App\UI\Manage\ManagePresenter($this->getService('02'));
+		$service = new App\UI\Manage\ManagePresenter($this->getService('database.default.explorer'));
 		$service->injectPrimary(
 			$this->getService('http.request'),
 			$this->getService('http.response'),
@@ -352,7 +347,7 @@ class Container_a041629540 extends Nette\DI\Container
 	public function createServiceDatabase__default__connection(): Nette\Database\Connection
 	{
 		$service = new Nette\Database\Connection(
-			'mysql:host=127.0.0.1;dbname=tool_management',
+			'mysql:host=127.0.0.1;dbname=tool_repository',
 			/*sensitive{*/'adminer'/*}*/,
 			/*sensitive{*/'heslo'/*}*/,
 			[],
@@ -469,7 +464,7 @@ class Container_a041629540 extends Nette\DI\Container
 
 	public function createServiceSecurity__user(): Nette\Security\User
 	{
-		$service = new Nette\Security\User($this->getService('security.userStorage'), $this->getService('05'));
+		$service = new Nette\Security\User($this->getService('security.userStorage'), $this->getService('04'));
 		$this->getService('tracy.bar')->addPanel(new Nette\Bridges\SecurityTracy\UserPanel($service));
 		return $service;
 	}

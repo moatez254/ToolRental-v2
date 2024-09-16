@@ -20,53 +20,49 @@ final class Template_359435aadb extends Latte\Runtime\Template
 		}
 
 		echo ' <!DOCTYPE html>
-<html lang="ar">
+<html lang="cs">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة الأدوات</title>
+    <title>Správa nástrojů</title>
     
- 
     <link rel="stylesheet" href="/css/styles.css">
      
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
- 
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
- 
 <nav>
     <ul>
         <li><a href="';
-		echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link('Homepage:default')) /* line 21 */;
-		echo '" class="active">الصفحة الرئيسية</a></li>
+		echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link('Homepage:default')) /* line 18 */;
+		echo '" class="active">Hlavní stránka</a></li>
         <li><a href="';
-		echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link('Borrow:default')) /* line 22 */;
-		echo '">تسجيل خروج الأدوات</a></li>
+		echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link('Borrow:default')) /* line 19 */;
+		echo '">Vypůjčení nástrojů</a></li>
         <li><a href="';
-		echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link('Return:default')) /* line 23 */;
-		echo '">إعادة الأدوات</a></li>
+		echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link('Return:default')) /* line 20 */;
+		echo '">Vrácení nástrojů</a></li>
 
 ';
-		if ($user->isInRole('admin')) /* line 25 */ {
+		if ($user->isInRole('admin')) /* line 22 */ {
 			echo '            <li><a href="';
-			echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link('Manage:default')) /* line 26 */;
-			echo '">إدارة المنتجات</a></li>
+			echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link('Manage:default')) /* line 23 */;
+			echo '">Správa produktů</a></li>
 ';
 		}
 		echo '
         <li><a href="';
-		echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link('Sign:out')) /* line 29 */;
-		echo '">تسجيل الخروج</a></li>
+		echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link('Sign:out')) /* line 26 */;
+		echo '">Odhlásit se</a></li>
     </ul>
 </nav>
 
- 
 <div class="container">
 ';
-		$this->renderBlock('content', [], 'html') /* line 35 */;
+		$this->renderBlock('content', [], 'html') /* line 31 */;
 		echo '</div>
 
 </body>

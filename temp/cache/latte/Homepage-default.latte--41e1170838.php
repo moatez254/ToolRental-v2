@@ -23,81 +23,49 @@ final class Template_41e1170838 extends Latte\Runtime\Template
 			return;
 		}
 
-		echo "\n";
-		$this->renderBlock('content', get_defined_vars()) /* line 2 */;
+		$this->renderBlock('content', get_defined_vars()) /* line 1 */;
 	}
 
 
-	/** {block content} on line 2 */
+	/** {block content} on line 1 */
 	public function blockContent(array $ʟ_args): void
 	{
 		extract($this->params);
 		extract($ʟ_args);
 		unset($ʟ_args);
 
-		echo '
- 
-<div class="container">
-    <h1>مرحبًا، ';
-		echo LR\Filters::escapeHtmlText($user->identity->username) /* line 6 */;
+		echo '<h1>Welcome, ';
+		echo LR\Filters::escapeHtmlText($user->identity->username) /* line 2 */;
 		echo '</h1>
- 
-    <div class="canvas-container">
-        <canvas id="availableToolsChart" width="400" height="400"></canvas>
-        <canvas id="borrowedToolsChart" width="400" height="400"></canvas>
-    </div>
-</div>
- <script>
- 
-    var availableToolsData = ';
-		echo LR\Filters::convertJSToHtmlRawText($availableToolsJson) /* line 15 */;
-		echo ';
-    var borrowedToolsData = ';
-		echo LR\Filters::convertJSToHtmlRawText($borrowedToolsJson) /* line 16 */;
-		echo ';
 
-    
-    console.log("Available Tools Data:", availableToolsData);
-    console.log("Borrowed Tools Data:", borrowedToolsData);
+<canvas id="toolsChart" width="400" height="200"></canvas>
 
-    
-    if (!Array.isArray(availableToolsData)) {
-         
-        availableToolsData = Object.values(availableToolsData);
-    }
-
-    if (!Array.isArray(borrowedToolsData)) {
-        borrowedToolsData = Object.values(borrowedToolsData);
-    }
-
-     
-
-    var ctx1 = document.getElementById(\'availableToolsChart\').getContext(\'2d\');
-    new Chart(ctx1, {
-        type: \'pie\',
-        data: {
-            labels: availableToolsData.map(tool => tool.name),  
-            datasets: [{
-                data: availableToolsData.map(tool => tool.quantity),  
-                backgroundColor: [\'#36A2EB\', \'#FF6384\', \'#FFCE56\', \'#4BC0C0\']
-            }]
-        }
-    });
-
-    var ctx2 = document.getElementById(\'borrowedToolsChart\').getContext(\'2d\');
-    new Chart(ctx2, {
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById(\'toolsChart\').getContext(\'2d\');
+    var chart = new Chart(ctx, {
         type: \'bar\',
         data: {
-            labels: borrowedToolsData.map(tool => tool.name),  
+            labels: ';
+		echo LR\Filters::convertJSToHtmlRawText($toolNamesJson) /* line 12 */;
+		echo ',
             datasets: [{
-                label: \'Borrowed Quantity\',
-                data: borrowedToolsData.map(tool => tool.quantity), 
-                backgroundColor: \'#FF6384\'
+                label: \'Available Tools\',
+                data: ';
+		echo LR\Filters::convertJSToHtmlRawText($toolQuantitiesJson) /* line 15 */;
+		echo ',
+                backgroundColor: \'rgba(54, 162, 235, 0.6)\'
             }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
         }
     });
 </script>
-
 ';
 	}
 }

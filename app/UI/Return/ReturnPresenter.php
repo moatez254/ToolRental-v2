@@ -4,30 +4,98 @@ declare(strict_types=1);
 
 namespace App\UI\Return;
 
-use Nette\Application\UI\Presenter;
-use App\Model\Borrow;
-use App\Model\Tool;
+use App\UI\homepage\BasePresenter;
+use Nette;
+use Nette\Application\UI\Form;
 
-class ReturnPresenter extends Presenter
+final class ReturnPresenter extends BasePresenter
 {
-    private Borrow $borrowModel;
-    private Tool $toolModel;
+    private Nette\Database\Explorer $database;
 
-    public function __construct(Borrow $borrowModel, Tool $toolModel)
+    public function __construct(Nette\Database\Explorer $database)
     {
-        $this->borrowModel = $borrowModel;
-        $this->toolModel = $toolModel;
+        parent::__construct();
+        $this->database = $database;
     }
 
     public function renderDefault(): void
     {
-        $this->template->borrows = $this->borrowModel->getBorrowsByUser($this->getUser()->getId());
+        $userId = $this->user->getId();
+        $borrowedTools = $this->database->table('borrowed_tools')
+            ->where('user_id', $userId)
+            ->where('status', 'borrowed')
+            ->fetchAll();
+
+        $this->template->borrowedTools = $borrowedTools;
     }
 
-    public function handleReturn(int $borrowId, string $status, int $quantity): void
+    protected function createComponentReturnForm(): Form
     {
-        $this->borrowModel->returnTool($borrowId, $status, $quantity);
-        $this->toolModel->returnTool($borrowId, $quantity);
-        $this->redirect('Homepage:');
+        $form = new Form;
+
+        $userId = $this->user->getId();
+		$borrowedToolsRows = $this->database->table('borrowed_tools')
+		->where('user_id', $userId)
+		->where('status', 'borrowed')
+		->fetchAll();
+	
+		$borrowedTools = [];
+		foreach ($borrowedToolsRows as $row) {
+		$tool = $row->ref('tools', 'tool_id');
+		$borrowedTools[$row->id] = $tool->name;
+	}
+	
+
+        $form->addCheckboxList('borrowed_tool_ids', 'Select Tools to Return:', $borrowedTools)
+            ->setRequired('Please select at least one tool to return.');
+
+        $form->addSelect('condition', 'Condition upon Return:', [
+            'intact' => 'Intact',
+            'damaged' => 'Damaged',
+            'lost' => 'Lost',
+            'consumed' => 'Consumed (not returning)'
+        ])
+        ->setPrompt('Select Condition')
+        ->setRequired('Please select the condition of the tools.');
+
+        $form->addSubmit('return', 'Return Tools');
+
+        $form->onSuccess[] = [$this, 'returnFormSucceeded'];
+
+        return $form;
+    }
+
+    public function returnFormSucceeded(Form $form, \stdClass $values): void
+    {
+        $borrowedToolIds = $values->borrowed_tool_ids;
+        $condition = $values->condition;
+
+        foreach ($borrowedToolIds as $borrowedToolId) {
+            $this->database->beginTransaction();
+            try {
+                $borrowedTool = $this->database->table('borrowed_tools')->get($borrowedToolId);
+
+                
+                $borrowedTool->update([
+                    'status' => 'returned',
+                    'condition' => $condition
+                ]);
+
+            
+                if ($condition === 'intact' || $condition === 'damaged') {
+                    $tool = $this->database->table('tools')->get($borrowedTool->tool_id);
+                    $tool->update(['quantity' => $tool->quantity + 1]);
+                }
+
+                $this->database->commit();
+            } catch (\Exception $e) {
+                $this->database->rollBack();
+                $form->addError('An error occurred while returning tools: ' . $e->getMessage());
+                return;
+            }
+        }
+
+        $this->flashMessage('Tools returned successfully.', 'success');
+        $this->redirect('Homepage:default');
     }
 }

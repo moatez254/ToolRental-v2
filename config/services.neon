@@ -3,7 +3,9 @@ services:
 	- App\Model\Tool
 	- App\Model\Borrow
 	- App\Model\UserManager
-	- App\Security\Authenticator
+
+ 
+
 	  	 
 
 	 

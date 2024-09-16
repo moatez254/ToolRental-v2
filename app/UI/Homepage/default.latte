@@ -1,60 +1,28 @@
-
  {block content}
+<h1>Welcome, {$user->identity->username}</h1>
 
- 
-<div class="container">
-    <h1>مرحبًا، {$user->identity->username}</h1>
- 
-    <div class="canvas-container">
-        <canvas id="availableToolsChart" width="400" height="400"></canvas>
-        <canvas id="borrowedToolsChart" width="400" height="400"></canvas>
-    </div>
-</div>
- <script>
- 
-    var availableToolsData = {$availableToolsJson|noescape};
-    var borrowedToolsData = {$borrowedToolsJson|noescape};
+<canvas id="toolsChart" width="400" height="200"></canvas>
 
-    
-    console.log("Available Tools Data:", availableToolsData);
-    console.log("Borrowed Tools Data:", borrowedToolsData);
-
-    
-    if (!Array.isArray(availableToolsData)) {
-         
-        availableToolsData = Object.values(availableToolsData);
-    }
-
-    if (!Array.isArray(borrowedToolsData)) {
-        borrowedToolsData = Object.values(borrowedToolsData);
-    }
-
-     
-
-    var ctx1 = document.getElementById('availableToolsChart').getContext('2d');
-    new Chart(ctx1, {
-        type: 'pie',
-        data: {
-            labels: availableToolsData.map(tool => tool.name),  
-            datasets: [{
-                data: availableToolsData.map(tool => tool.quantity),  
-                backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0']
-            }]
-        }
-    });
-
-    var ctx2 = document.getElementById('borrowedToolsChart').getContext('2d');
-    new Chart(ctx2, {
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('toolsChart').getContext('2d');
+    var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: borrowedToolsData.map(tool => tool.name),  
+            labels: {$toolNamesJson|noescape},
             datasets: [{
-                label: 'Borrowed Quantity',
-                data: borrowedToolsData.map(tool => tool.quantity), 
-                backgroundColor: '#FF6384'
+                label: 'Available Tools',
+                data: {$toolQuantitiesJson|noescape},
+                backgroundColor: 'rgba(54, 162, 235, 0.6)'
             }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
         }
     });
 </script>
-
 {/block}

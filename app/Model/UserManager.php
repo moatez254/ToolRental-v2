@@ -4,35 +4,41 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-use Nette\Database\Explorer;
+use Nette;
+use Nette\Security\SimpleIdentity;
 use Nette\Security\Passwords;
 
-class UserManager
+final class UserManager implements Nette\Security\Authenticator
 {
-    private Explorer $database;
+    use Nette\SmartObject;
+
+    private Nette\Database\Explorer $database;
     private Passwords $passwords;
 
-    public function __construct(Explorer $database, Passwords $passwords)
+    public function __construct(Nette\Database\Explorer $database, Passwords $passwords)
     {
         $this->database = $database;
         $this->passwords = $passwords;
     }
 
-    public function findByUsername(string $username)
+    public function authenticate(string $username, string $password): SimpleIdentity
     {
-        return $this->database->table('users')
+        $row = $this->database->table('users')
             ->where('username', $username)
             ->fetch();
-    }
 
-    public function authenticate(string $username, string $password)
-    {
-        $user = $this->database->table('users')->where('username', $username)->fetch();
-
-        if (!$user || !$this->passwords->verify($password, $user->password)) {
-            throw new \Nette\Security\AuthenticationException('Invalid username or password.');
+        if (!$row) {
+            throw new Nette\Security\AuthenticationException('User not found.');
         }
 
-        return $user;
+        if (!$this->passwords->verify($password, $row->password)) {
+            throw new Nette\Security\AuthenticationException('Invalid password.');
+        }
+
+        return new SimpleIdentity(
+            $row->id,
+            $row->role,
+            ['username' => $row->username]
+        );
     }
 }

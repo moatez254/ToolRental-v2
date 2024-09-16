@@ -9,7 +9,7 @@ application:
 
 
 database:
-	dsn: 'mysql:host=127.0.0.1;dbname=tool_management'
+	dsn: 'mysql:host=127.0.0.1;dbname=tool_repository'
 	user: adminer
 	password: heslo
 
@@ -25,3 +25,7 @@ di:
 	export:
 		parameters: no
 		tags: no
+
+ 
+ 
+		
